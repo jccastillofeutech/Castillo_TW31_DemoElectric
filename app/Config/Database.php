@@ -201,6 +201,14 @@ class Database extends Config
         $this->default['port'] = (int) env('DB_PORT', $this->default['port']);
         $databaseUrl = trim((string) env('DATABASE_URL', ''));
 
+        // MySQL uses utf8mb4, but PostgreSQL expects the client encoding
+        // name utf8. Passing utf8mb4 to PostgreSQL causes every DB request
+        // to fail during connection setup.
+        if (strcasecmp($this->default['DBDriver'], 'Postgre') === 0) {
+            $this->default['charset'] = 'utf8';
+            $this->default['DBCollat'] = '';
+        }
+
         // Render provides PostgreSQL as a DATABASE_URL. Parse it into the
         // normal CodeIgniter connection fields instead of passing the full
         // URL as a DSN to the PostgreSQL driver.
