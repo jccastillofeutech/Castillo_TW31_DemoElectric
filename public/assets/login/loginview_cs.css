@@ -230,15 +230,56 @@ body {
 
 @media (max-width: 480px) {
     body {
-        padding: 22px 14px;
+        padding: 14px 10px;
     }
 
     .login-card {
-        padding: 30px 24px;
+        padding: 25px 18px;
     }
 
     .login-brand {
-        margin-bottom: 27px;
+        margin-bottom: 24px;
+    }
+
+    .login-brand__icon {
+        width: 52px;
+        height: 52px;
+        margin-bottom: 10px;
+        font-size: 24px;
+    }
+
+    .login-brand h1 {
+        font-size: 1.3rem;
+    }
+
+    .login-brand p,
+    .login-form__intro {
+        font-size: 0.8rem;
+    }
+
+    .login-form h2 {
+        font-size: 1.2rem;
+    }
+
+    .login-field input,
+    .login-submit {
+        min-height: 46px;
+    }
+}
+
+@media (max-width: 360px) {
+    .login-card {
+        padding: 22px 15px;
+        border-radius: 12px;
+    }
+
+    .login-field {
+        margin-bottom: 14px;
+    }
+
+    .login-footer {
+        margin-top: 18px;
+        font-size: 0.68rem;
     }
 }
 

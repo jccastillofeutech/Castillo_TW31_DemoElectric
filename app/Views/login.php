@@ -1,5 +1,13 @@
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-<link rel="stylesheet" href="<?= base_url('public/assets/login/loginview_cs.css') ?>">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Puihaha Electric Company</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="<?= base_url('public/assets/login/loginview_cs.css') ?>">
+</head>
+<body>
 
 <main class="login-page">
     <?php if ($error = session()->getFlashdata('error')): ?>
@@ -57,3 +65,5 @@
 </main>
 
 <script src="<?= base_url('public/assets/login/login_js.js') ?>"></script>
+</body>
+</html>

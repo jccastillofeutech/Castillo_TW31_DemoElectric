@@ -12,6 +12,7 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px 0;
+            overflow-x: hidden;
         }
 
         .main-container {
@@ -141,6 +142,11 @@
 
         .table-container {
             overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .table {
+            min-width: 860px;
         }
 
 
@@ -196,6 +202,16 @@
         }
 
         @media (max-width: 768px) {
+            body {
+                padding: 8px 0;
+            }
+
+            .main-container {
+                padding: 20px 16px;
+                margin: 8px auto;
+                border-radius: 10px;
+            }
+
             .dashboard-header {
                 grid-template-columns: 1fr;
                 gap: 15px;
@@ -217,6 +233,59 @@
 
             .header-right {
                 order: 3;
+            }
+
+            .header-title h1 {
+                font-size: 1.45rem;
+            }
+
+            .dashboard-header .header-left,
+            .dashboard-header .header-right,
+            .dashboard-header .btn {
+                width: 100%;
+            }
+
+            .stats-card {
+                padding: 16px;
+            }
+
+            .stats-card h3 {
+                font-size: 1.6rem;
+            }
+
+            .search-filter-section .col-md-2 {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .search-filter-section .col-md-2 .btn {
+                min-width: 0;
+            }
+
+            #bulkToolbar {
+                flex-wrap: wrap;
+            }
+
+            #bulkToolbar button {
+                flex: 1 1 140px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-container {
+                padding: 16px 10px;
+            }
+
+            .search-filter-section {
+                padding: 14px;
+            }
+
+            .search-filter-section .col-md-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .pagination {
+                flex-wrap: wrap;
             }
         }
     </style>

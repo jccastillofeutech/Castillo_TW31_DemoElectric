@@ -46,6 +46,41 @@ $value = static function (string $field) use ($account) {
         .btn {
             border-radius: 8px;
         }
+
+        @media (max-width: 576px) {
+            body {
+                padding: 8px 0;
+            }
+
+            .container.py-5 {
+                padding-top: 16px !important;
+                padding-bottom: 16px !important;
+            }
+
+            .form-card {
+                padding: 20px 16px;
+                border-radius: 12px;
+            }
+
+            .form-card > .d-flex {
+                align-items: stretch !important;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .form-card h2 {
+                font-size: 1.35rem;
+            }
+
+            .form-card > .d-flex .btn,
+            .form-card form .mt-4 .btn {
+                width: 100%;
+            }
+
+            .form-card form .mt-4 {
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
 

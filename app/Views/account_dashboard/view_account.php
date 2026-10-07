@@ -49,6 +49,7 @@
         .info-value {
             font-size: 1.1rem;
             color: #333;
+            overflow-wrap: anywhere;
         }
 
         .badge-active {
@@ -62,6 +63,43 @@
         .badge-suspended {
             background-color: #ffc107;
             color: #000;
+        }
+
+        @media (max-width: 576px) {
+            body {
+                padding: 8px 0;
+            }
+
+            .main-container {
+                padding: 20px 14px;
+                margin: 8px auto;
+                border-radius: 10px;
+            }
+
+            .header-section {
+                margin-bottom: 20px;
+            }
+
+            .header-section h1 {
+                font-size: 1.45rem;
+            }
+
+            .main-container > .d-flex {
+                align-items: stretch !important;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .main-container > .d-flex .btn,
+            .main-container .border-top form,
+            .main-container .border-top button {
+                width: 100%;
+            }
+
+            .info-group {
+                padding: 12px;
+                margin-bottom: 12px;
+            }
         }
     </style>
 </head>
