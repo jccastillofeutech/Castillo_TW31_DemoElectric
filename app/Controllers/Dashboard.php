@@ -43,7 +43,9 @@ class Dashboard extends BaseController
     public function create()
     {
         if ($redirect = $this->loginRedirect()) return $redirect;
-        return view('account_dashboard/create_account');
+        return view('account_dashboard/create_account', [
+            'generatedAccountNumber' => $this->customerModel->nextAccountNumber(),
+        ]);
     }
 
     public function store()

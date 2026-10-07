@@ -117,6 +117,7 @@ $value = static function (string $field) use ($account) {
                             type="text"
                             class="form-control"
                             value="<?= esc($value('account_number')) ?>"
+                            style="color: #6c757d;"
                             readonly
                             aria-readonly="true"
                         >
@@ -125,11 +126,11 @@ $value = static function (string $field) use ($account) {
                         <input
                             type="text"
                             class="form-control"
-                            value="Generated automatically when saved"
+                            value="<?= esc($generatedAccountNumber ?? '') ?>"
+                            style="color: #6c757d;"
                             readonly
                             aria-readonly="true"
                         >
-                        <div class="form-text">Format: EC-year-sequence, for example EC-2026-0001.</div>
                     <?php endif; ?>
                 </div>
 
