@@ -199,7 +199,35 @@ class Database extends Config
         $this->default['password'] = (string) env('DB_PASSWORD', $this->default['password']);
         $this->default['DBDriver'] = (string) env('DB_DRIVER', $this->default['DBDriver']);
         $this->default['port'] = (int) env('DB_PORT', $this->default['port']);
-        $this->default['DSN'] = (string) env('DATABASE_URL', $this->default['DSN']);
+        $databaseUrl = trim((string) env('DATABASE_URL', ''));
+
+        // Render provides PostgreSQL as a DATABASE_URL. Parse it into the
+        // normal CodeIgniter connection fields instead of passing the full
+        // URL as a DSN to the PostgreSQL driver.
+        if ($databaseUrl !== '' && strcasecmp($this->default['DBDriver'], 'Postgre') === 0) {
+            $parts = parse_url($databaseUrl);
+
+            if (is_array($parts) && isset($parts['host'])) {
+                $this->default['hostname'] = $parts['host'];
+                $this->default['port'] = isset($parts['port']) ? (int) $parts['port'] : 5432;
+                $this->default['database'] = ltrim((string) ($parts['path'] ?? ''), '/');
+                $this->default['username'] = isset($parts['user']) ? urldecode($parts['user']) : '';
+                $this->default['password'] = isset($parts['pass']) ? urldecode($parts['pass']) : '';
+                $this->default['DSN'] = '';
+
+                if (! empty($parts['query'])) {
+                    parse_str($parts['query'], $query);
+
+                    foreach (['connect_timeout', 'options', 'sslmode', 'service'] as $key) {
+                        if (isset($query[$key]) && is_string($query[$key])) {
+                            $this->default[$key] = $query[$key];
+                        }
+                    }
+                }
+            }
+        } else {
+            $this->default['DSN'] = $databaseUrl;
+        }
 
         if (ENVIRONMENT === 'production') {
             $this->default['DBDebug'] = false;
