@@ -13,15 +13,32 @@ class Auth extends BaseController
         if ($this->request->getMethod() === 'POST') {
             $email = strtolower(trim((string) $this->request->getPost('email')));
             $password = (string) $this->request->getPost('password');
-            $user = (new LoginUser())->where('username', $email)->first();
 
-            if ($user === null || ! password_verify($password, (string) $user['password'])) {
-                return redirect()->back()->withInput()->with('error', 'Invalid email address or password.');
+            try {
+                $user = (new LoginUser())->where('username', $email)->first();
+
+                if ($user === null || ! password_verify($password, (string) $user['password'])) {
+                    return redirect()->to(base_url('login'))->withInput()->with('error', 'Invalid email address or password.');
+                }
+
+                // Keep the existing session data while rotating its ID. This
+                // is safer for Render's file-based production sessions.
+                session()->regenerate(false);
+                session()->set([
+                    'isLogged' => true,
+                    'user_id' => (int) $user['id'],
+                    'username' => $user['username'],
+                ]);
+
+                return redirect()->to(base_url('account-dashboard'));
+            } catch (\Throwable $exception) {
+                log_message('critical', 'Login failed: {message}', ['message' => $exception->getMessage()]);
+
+                return redirect()->to(base_url('login'))->withInput()->with(
+                    'error',
+                    'Login is temporarily unavailable. Please try again.'
+                );
             }
-
-            session()->regenerate(true);
-            session()->set(['isLogged' => true, 'user_id' => (int) $user['id'], 'username' => $user['username']]);
-            return redirect()->to(base_url('account-dashboard'));
         }
 
         return view('login');
