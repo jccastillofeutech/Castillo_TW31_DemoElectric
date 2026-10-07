@@ -3,7 +3,6 @@ services:
     name: demo-electric
     runtime: docker
     plan: free
-    preDeployCommand: php spark migrate --all
     healthCheckPath: /health
     envVars:
       - key: CI_ENVIRONMENT
