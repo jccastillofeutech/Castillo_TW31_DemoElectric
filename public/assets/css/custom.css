@@ -78,6 +78,32 @@
     width: 80%;
 }
 
+/* On narrow screens, underline only the link text instead of the full row. */
+@media (max-width: 991.98px) {
+    .navbar-nav .nav-link {
+        display: inline-block;
+        width: auto;
+        margin: 0.35rem 0;
+    }
+}
+
+.back-to-top {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 !important;
+    line-height: 1;
+}
+
+@media (max-width: 575.98px) {
+    .back-to-top {
+        right: 1rem !important;
+        bottom: 1rem !important;
+        width: 46px !important;
+        height: 46px !important;
+    }
+}
+
 /* Hero section enhancements */
 .hero-section {
     position: relative;

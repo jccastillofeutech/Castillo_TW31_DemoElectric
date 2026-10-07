@@ -175,16 +175,8 @@ document.addEventListener('DOMContentLoaded', function() {
      * Parallax effects
      */
     function initParallaxEffects() {
-        const parallaxElements = document.querySelectorAll('.hero-section');
-
-        window.addEventListener('scroll', function() {
-            const scrolled = window.pageYOffset;
-            const rate = scrolled * -0.5;
-
-            parallaxElements.forEach(element => {
-                element.style.transform = `translateY(${rate}px)`;
-            });
-        });
+        // Keep hero sections in the normal document flow. Moving the entire
+        // section while scrolling creates blank gaps on small screens.
     }
 
     /**
@@ -309,7 +301,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const backToTopBtn = document.createElement('button');
 
     backToTopBtn.innerHTML = '<i class="fas fa-chevron-up"></i>';
-    backToTopBtn.className = 'btn btn-primary position-fixed';
+    backToTopBtn.className = 'btn btn-primary position-fixed back-to-top';
+    backToTopBtn.type = 'button';
+    backToTopBtn.setAttribute('aria-label', 'Back to top');
 
     backToTopBtn.style.cssText = `
         bottom: 20px;
@@ -326,7 +320,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     window.addEventListener('scroll', function() {
         if (window.pageYOffset > 300) {
-            backToTopBtn.style.display = 'block';
+            backToTopBtn.style.display = 'flex';
         } else {
             backToTopBtn.style.display = 'none';
         }
