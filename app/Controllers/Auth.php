@@ -18,7 +18,12 @@ class Auth extends BaseController
             try {
                 // Registration stores the canonical account in `users`.
                 // Keep the legacy login table as a fallback for existing data.
-                $user = (new User())->where('email', $email)->first();
+                try {
+                    $user = (new User())->where('email', $email)->first();
+                } catch (\Throwable $exception) {
+                    // A legacy deployment may not have the unified users table.
+                    $user = null;
+                }
 
                 if ($user === null) {
                     $user = (new LoginUser())->where('username', $email)->first();

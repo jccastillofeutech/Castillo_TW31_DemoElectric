@@ -33,7 +33,7 @@ class Register extends BaseController
         $validation->setRules([
             'first_name' => 'required|min_length[2]|max_length[100]',
             'last_name' => 'required|min_length[2]|max_length[100]',
-            'email' => 'required|valid_email|is_unique[users.email]',
+            'email' => 'required|valid_email',
             'phone' => 'required|min_length[10]|max_length[20]',
             'address' => 'required|min_length[5]|max_length[255]',
             'city' => 'required|min_length[2]|max_length[100]',
@@ -44,32 +44,33 @@ class Register extends BaseController
             'terms' => 'required',
         ]);
 
-        if (! $validation->withRequest($this->request)->run()) {
-            session()->setFlashdata('validation', $validation->getErrors());
-
-            return redirect()->back()->withInput();
-        }
-
-        $email = strtolower(trim((string) $this->request->getPost('email')));
-
-        $userData = [
-            'first_name' => $this->request->getPost('first_name'),
-            'last_name' => $this->request->getPost('last_name'),
-            'email' => $email,
-            'phone' => $this->request->getPost('phone'),
-            'address' => $this->request->getPost('address'),
-            'city' => $this->request->getPost('city'),
-            'state' => $this->request->getPost('state'),
-            'zip_code' => $this->request->getPost('zip_code'),
-            'password' => $this->request->getPost('password'),
-            'user_type' => 'customer',
-            'is_active' => true,
-            'email_verified' => false,
-        ];
-
-        $db = db_connect();
+        $db = null;
 
         try {
+            if (! $validation->withRequest($this->request)->run()) {
+                session()->setFlashdata('validation', $validation->getErrors());
+
+                return redirect()->back()->withInput();
+            }
+
+            $email = strtolower(trim((string) $this->request->getPost('email')));
+
+            $userData = [
+                'first_name' => $this->request->getPost('first_name'),
+                'last_name' => $this->request->getPost('last_name'),
+                'email' => $email,
+                'phone' => $this->request->getPost('phone'),
+                'address' => $this->request->getPost('address'),
+                'city' => $this->request->getPost('city'),
+                'state' => $this->request->getPost('state'),
+                'zip_code' => $this->request->getPost('zip_code'),
+                'password' => $this->request->getPost('password'),
+                'user_type' => 'customer',
+                'is_active' => true,
+                'email_verified' => false,
+            ];
+
+            $db = db_connect();
             $db->transBegin();
             $userId = $this->userModel->insert($userData);
 
@@ -101,7 +102,7 @@ class Register extends BaseController
 
             return redirect()->back()->withInput();
         } catch (\Throwable $e) {
-            if ($db->transStatus() !== false) {
+            if ($db !== null && $db->transStatus() !== false) {
                 $db->transRollback();
             }
 
