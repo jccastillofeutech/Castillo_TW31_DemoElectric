@@ -109,7 +109,6 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     function initNavigationEffects() {
         const navbar = document.querySelector('.navbar');
-        let lastScrollTop = 0;
 
         window.addEventListener('scroll', function() {
             const scrollTop =
@@ -122,14 +121,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 navbar.classList.remove('scrolled');
             }
 
-            // Hide/show navbar on scroll
-            if (scrollTop > lastScrollTop && scrollTop > 100) {
-                navbar.style.transform = 'translateY(-100%)';
-            } else {
-                navbar.style.transform = 'translateY(0)';
-            }
-
-            lastScrollTop = scrollTop;
+            // Keep the sticky navbar visible in both scroll directions.
+            navbar.style.transform = 'none';
         });
 
         // Smooth scroll for anchor links
