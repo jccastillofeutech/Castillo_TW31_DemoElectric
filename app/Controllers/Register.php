@@ -70,14 +70,6 @@ class Register extends BaseController
         $db = db_connect();
 
         try {
-            if ($db->table('user_accounts')
-                ->where('username', $email)
-                ->countAllResults() > 0) {
-                session()->setFlashdata('error', 'This email address is already registered.');
-
-                return redirect()->back()->withInput();
-            }
-
             $db->transBegin();
             $userId = $this->userModel->insert($userData);
 
@@ -90,14 +82,9 @@ class Register extends BaseController
                     throw new \RuntimeException('The registered user could not be read back.');
                 }
 
-                $accountInserted = $db->table('user_accounts')->insert([
-                    'username' => $email,
-                    'password' => $savedUser['password'],
-                ]);
-
-                if (! $accountInserted || $db->transStatus() === false) {
+                if ($db->transStatus() === false) {
                     $db->transRollback();
-                    throw new \RuntimeException('The login account could not be created.');
+                    throw new \RuntimeException('The customer account could not be created.');
                 }
 
                 $db->transCommit();
@@ -113,7 +100,7 @@ class Register extends BaseController
             session()->setFlashdata('error', 'Registration failed. Please try again.');
 
             return redirect()->back()->withInput();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             if ($db->transStatus() !== false) {
                 $db->transRollback();
             }
