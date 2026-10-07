@@ -22,6 +22,22 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
+            margin: 0;
+        }
+
+        /* Keep the public-site navigation attached to the viewport while scrolling. */
+        .site-navbar {
+            position: sticky !important;
+            top: 0;
+            z-index: 1030;
+            width: 100%;
+        }
+
+        @media (max-width: 991.98px) {
+            .site-navbar .navbar-collapse {
+                max-height: calc(100vh - 72px);
+                overflow-y: auto;
+            }
         }
 
         .navbar-brand {
@@ -198,7 +214,7 @@
 
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top site-navbar">
         <div class="container">
             <a class="navbar-brand" href="<?= base_url() ?>">
                 <i class="fas fa-bolt text-warning me-2"></i>Puihaha Electric
