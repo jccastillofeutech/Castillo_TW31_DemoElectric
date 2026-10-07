@@ -19,4 +19,4 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progre
     && chown -R www-data:www-data writable
 
 EXPOSE 10000
-CMD ["apache2-foreground"]
+CMD ["sh", "-c", "php spark migrate --all && exec apache2-foreground"]
