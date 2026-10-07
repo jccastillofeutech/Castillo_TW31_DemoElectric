@@ -3,7 +3,7 @@ FROM php:8.3-apache
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends libicu-dev libpq-dev unzip git \
+    && apt-get install -y --no-install-recommends libicu-dev libonig-dev libpq-dev unzip git \
     && docker-php-ext-install intl mbstring mysqli pgsql \
     && a2enmod rewrite \
     && sed -ri "s!/var/www/html!${APACHE_DOCUMENT_ROOT}!g" /etc/apache2/sites-available/*.conf /etc/apache2/apache2.conf \
