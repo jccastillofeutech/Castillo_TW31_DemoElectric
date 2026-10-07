@@ -16,6 +16,7 @@ WORKDIR /var/www/html
 COPY . .
 
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress \
+    && mkdir -p writable/cache writable/debugbar writable/logs writable/session writable/uploads \
     && chown -R www-data:www-data writable
 
 EXPOSE 10000
