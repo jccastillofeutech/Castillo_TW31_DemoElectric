@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\LoginUser;
+use App\Models\User;
 
 class Auth extends BaseController
 {
@@ -15,7 +16,13 @@ class Auth extends BaseController
             $password = (string) $this->request->getPost('password');
 
             try {
-                $user = (new LoginUser())->where('username', $email)->first();
+                // Registration stores the canonical account in `users`.
+                // Keep the legacy login table as a fallback for existing data.
+                $user = (new User())->where('email', $email)->first();
+
+                if ($user === null) {
+                    $user = (new LoginUser())->where('username', $email)->first();
+                }
 
                 if ($user === null || ! password_verify($password, (string) $user['password'])) {
                     return redirect()->to(base_url('login'))->withInput()->with('error', 'Invalid email address or password.');
@@ -27,7 +34,7 @@ class Auth extends BaseController
                 session()->set([
                     'isLogged' => true,
                     'user_id' => (int) $user['id'],
-                    'username' => $user['username'],
+                    'username' => $user['username'] ?? $user['email'] ?? $email,
                 ]);
 
                 return redirect()->to(base_url('account-dashboard'));
