@@ -120,6 +120,17 @@ class Logger extends BaseConfig
             'path' => '',
         ],
 
+        // Render collects PHP's error_log output in the service logs.
+        'CodeIgniter\\Log\\Handlers\\ErrorlogHandler' => [
+            'handles' => [
+                'critical',
+                'alert',
+                'emergency',
+                'error',
+            ],
+            'messageType' => 0,
+        ],
+
         /*
          * The ChromeLoggerHandler requires the use of the Chrome web browser
          * and the ChromeLogger extension. Uncomment this block to use it.
