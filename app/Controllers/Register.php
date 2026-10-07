@@ -50,10 +50,12 @@ class Register extends BaseController
             return redirect()->back()->withInput();
         }
 
+        $email = strtolower(trim((string) $this->request->getPost('email')));
+
         $userData = [
             'first_name' => $this->request->getPost('first_name'),
             'last_name' => $this->request->getPost('last_name'),
-            'email' => $this->request->getPost('email'),
+            'email' => $email,
             'phone' => $this->request->getPost('phone'),
             'address' => $this->request->getPost('address'),
             'city' => $this->request->getPost('city'),
@@ -65,10 +67,40 @@ class Register extends BaseController
             'email_verified' => false,
         ];
 
+        $db = db_connect();
+
         try {
+            if ($db->table('user_accounts')
+                ->where('username', $email)
+                ->countAllResults() > 0) {
+                session()->setFlashdata('error', 'This email address is already registered.');
+
+                return redirect()->back()->withInput();
+            }
+
+            $db->transBegin();
             $userId = $this->userModel->insert($userData);
 
             if ($userId) {
+                // The User model hashes the password during its insert callback.
+                // Reuse that generated hash instead of hashing the password again.
+                $savedUser = $this->userModel->find($userId);
+                if ($savedUser === null || empty($savedUser['password'])) {
+                    $db->transRollback();
+                    throw new \RuntimeException('The registered user could not be read back.');
+                }
+
+                $accountInserted = $db->table('user_accounts')->insert([
+                    'username' => $email,
+                    'password' => $savedUser['password'],
+                ]);
+
+                if (! $accountInserted || $db->transStatus() === false) {
+                    $db->transRollback();
+                    throw new \RuntimeException('The login account could not be created.');
+                }
+
+                $db->transCommit();
                 session()->setFlashdata(
                     'success',
                     'Registration successful! Welcome to PowerFlow Electric. You can now contact us for your electrical needs.'
@@ -77,10 +109,15 @@ class Register extends BaseController
                 return redirect()->to('/register');
             }
 
+            $db->transRollback();
             session()->setFlashdata('error', 'Registration failed. Please try again.');
 
             return redirect()->back()->withInput();
         } catch (\Exception $e) {
+            if ($db->transStatus() !== false) {
+                $db->transRollback();
+            }
+
             session()->setFlashdata(
                 'error',
                 'Registration failed: ' . $e->getMessage()

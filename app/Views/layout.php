@@ -221,13 +221,16 @@
                                                                                                                 base_url('services') ?>">Services</a>
                     </li>
                     <li class="nav-item">
-                    
+
                         <a class="nav-link <?= (isset($page) && $page == 'contact') ? 'active' : '' ?>" href="<?=
                                                                                                                 base_url('contact') ?>">Contact</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link <?= (isset($page) && $page == 'register') ? 'active' : '' ?>" href="<?=
                                                                                                                 base_url('register') ?>">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= base_url('login') ?>">Log In</a>
                     </li>
                 </ul>
             </div>

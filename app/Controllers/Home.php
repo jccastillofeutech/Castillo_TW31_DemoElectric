@@ -12,4 +12,9 @@ class Home extends BaseController
         ];
         return view('home', $data);
     }
+
+    public function dashboard(): \CodeIgniter\HTTP\RedirectResponse
+    {
+        return redirect()->to('http://localhost/ci4_pagination/');
+    }
 }

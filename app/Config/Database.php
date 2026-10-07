@@ -29,7 +29,8 @@ class Database extends Config
         'hostname'     => 'localhost',
         'username'     => 'root',
         'password'     => '',
-        'database'     => 'electriccompany',
+        // Login, registration, and customer accounts now share this database.
+        'database'     => 'electric_company',
         'DBDriver'     => 'MySQLi',
         'DBPrefix'     => '',
         'pConnect'     => false,
@@ -190,6 +191,19 @@ class Database extends Config
     public function __construct()
     {
         parent::__construct();
+
+        // Environment variables override local defaults without committing secrets.
+        $this->default['hostname'] = (string) env('DB_HOST', $this->default['hostname']);
+        $this->default['database'] = (string) env('DB_DATABASE', $this->default['database']);
+        $this->default['username'] = (string) env('DB_USERNAME', $this->default['username']);
+        $this->default['password'] = (string) env('DB_PASSWORD', $this->default['password']);
+        $this->default['DBDriver'] = (string) env('DB_DRIVER', $this->default['DBDriver']);
+        $this->default['port'] = (int) env('DB_PORT', $this->default['port']);
+        $this->default['DSN'] = (string) env('DATABASE_URL', $this->default['DSN']);
+
+        if (ENVIRONMENT === 'production') {
+            $this->default['DBDebug'] = false;
+        }
 
         // Ensure that we always set the database group to 'tests' if
         // we are currently running an automated test suite, so that
