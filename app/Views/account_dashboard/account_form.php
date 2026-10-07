@@ -112,13 +112,25 @@ $value = static function (string $field) use ($account) {
             <div class="row g-3">
                 <div class="col-md-6">
                     <label class="form-label">Account Number</label>
-                    <input
-                        type="text"
-                        name="account_number"
-                        class="form-control"
-                        value="<?= esc($value('account_number')) ?>"
-                        required
-                    >
+                    <?php if ($isEdit): ?>
+                        <input
+                            type="text"
+                            class="form-control"
+                            value="<?= esc($value('account_number')) ?>"
+                            readonly
+                            aria-readonly="true"
+                        >
+                        <div class="form-text">Account numbers cannot be changed.</div>
+                    <?php else: ?>
+                        <input
+                            type="text"
+                            class="form-control"
+                            value="Generated automatically when saved"
+                            readonly
+                            aria-readonly="true"
+                        >
+                        <div class="form-text">Format: EC-year-sequence, for example EC-2026-0001.</div>
+                    <?php endif; ?>
                 </div>
 
                 <div class="col-md-6">

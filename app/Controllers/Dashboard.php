@@ -49,7 +49,8 @@ class Dashboard extends BaseController
     public function store()
     {
         if ($redirect = $this->loginRedirect()) return $redirect;
-        $data = $this->request->getPost(['account_number', 'customer_name', 'address', 'phone', 'email', 'meter_number', 'connection_type', 'status']);
+        $data = $this->request->getPost(['customer_name', 'address', 'phone', 'email', 'meter_number', 'connection_type', 'status']);
+        $data['account_number'] = $this->customerModel->nextAccountNumber();
         if (! $this->customerModel->insert($data)) return redirect()->back()->withInput()->with('errors', $this->customerModel->errors());
         return redirect()->to(base_url('account-dashboard'))->with('success', 'Customer account created successfully.');
     }
@@ -73,7 +74,7 @@ class Dashboard extends BaseController
     public function update(int $id)
     {
         if ($redirect = $this->loginRedirect()) return $redirect;
-        $data = $this->request->getPost(['account_number', 'customer_name', 'address', 'phone', 'email', 'meter_number', 'connection_type', 'status']);
+        $data = $this->request->getPost(['customer_name', 'address', 'phone', 'email', 'meter_number', 'connection_type', 'status']);
         if (! $this->customerModel->update($id, $data)) return redirect()->back()->withInput()->with('errors', $this->customerModel->errors());
         return redirect()->to(base_url('account/' . $id))->with('success', 'Customer account updated successfully.');
     }

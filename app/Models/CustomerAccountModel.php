@@ -23,6 +23,33 @@ class CustomerAccountModel extends Model
         'status' => 'required|in_list[active,inactive,suspended]',
     ];
 
+    public function nextAccountNumber(?int $year = null): string
+    {
+        $year ??= (int) date('Y');
+        $prefix = 'EC-' . $year . '-';
+        $usedNumbers = [];
+
+        $rows = $this->select('account_number')
+            ->like('account_number', $prefix, 'after')
+            ->findAll();
+
+        foreach ($rows as $row) {
+            $accountNumber = (string) ($row['account_number'] ?? '');
+
+            if (preg_match('/^EC-' . $year . '-(\d{4})$/', $accountNumber, $matches)) {
+                $usedNumbers[(int) $matches[1]] = true;
+            }
+        }
+
+        for ($number = 1; $number <= 9999; $number++) {
+            if (! isset($usedNumbers[$number])) {
+                return $prefix . str_pad((string) $number, 4, '0', STR_PAD_LEFT);
+            }
+        }
+
+        throw new \RuntimeException('No account numbers remain for ' . $year . '.');
+    }
+
     public function filtered(?string $keyword, ?string $status, ?string $type, int $perPage = 10): array
     {
         if ($keyword) {
