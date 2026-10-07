@@ -5,6 +5,7 @@ namespace Config;
 use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Session\Handlers\BaseHandler;
 use CodeIgniter\Session\Handlers\DatabaseHandler;
+use CodeIgniter\Session\Handlers\FileHandler;
 
 class Session extends BaseConfig
 {
@@ -21,7 +22,14 @@ class Session extends BaseConfig
      *
      * @var class-string<BaseHandler>
      */
-    public string $driver = DatabaseHandler::class;
+    // Render's free container has a writable filesystem for the running
+    // instance, while its PostgreSQL session table can differ between
+    // deployments. Use file sessions in production so login and registration
+    // do not fail while starting a session. Local development keeps the
+    // database-backed session handler.
+    public string $driver = ENVIRONMENT === 'production'
+        ? FileHandler::class
+        : DatabaseHandler::class;
 
     /**
      * --------------------------------------------------------------------------
@@ -57,7 +65,9 @@ class Session extends BaseConfig
      *
      * IMPORTANT: You are REQUIRED to set a valid save path!
      */
-    public string $savePath = 'ci_sessions';
+    public string $savePath = ENVIRONMENT === 'production'
+        ? WRITEPATH . 'session/'
+        : 'ci_sessions';
 
     /**
      * --------------------------------------------------------------------------
